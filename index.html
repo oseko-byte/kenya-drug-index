@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>Kenya Drug Index — Health Worker Reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #0b3d2e;
+      --green-2: #14644a;
+      --red: #b11a2b;
+      --black: #111714;
+      --paper: #f4f1ea;
+      --card: #fffdf8;
+      --line: #d7d0c4;
+      --muted: #5c675f;
+      --brand: #c97816;
+      --shadow: 0 10px 30px rgba(11,61,46,.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: "Source Sans 3", system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--black);
+    }
+    header {
+      background: linear-gradient(160deg, var(--green), #07261d);
+      color: #f7f4ee;
+      padding: 16px 18px 14px;
+      position: sticky; top: 0; z-index: 20;
+      box-shadow: 0 2px 12px rgba(0,0,0,.18);
+    }
+    .brand-row { display: flex; align-items: center; gap: 12px; }
+    .crest {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: #fff;
+      display: grid; place-items: center;
+      font-weight: 700; color: var(--green); font-size: 13px;
+      border: 3px solid #c5a24a;
+    }
+    h1 { font-family: "Source Serif 4", Georgia, serif; font-size: 1.15rem; margin: 0; line-height: 1.2; }
+    .sub { font-size: .78rem; opacity: .85; margin-top: 2px; }
+    .stripes { height: 6px; display: flex; }
+    .stripes span { flex: 1; }
+    .stripes .k { background: #111; }
+    .stripes .r { background: var(--red); }
+    .stripes .g { background: #1f7a3a; }
+    .search-wrap { margin-top: 12px; display: flex; gap: 8px; }
+    input[type="search"], select {
+      border: 0; border-radius: 10px; padding: 10px 12px;
+      font: inherit; width: 100%;
+      background: #f3faf6; color: #10231c;
+    }
+    select { width: auto; min-width: 150px; max-width: 42%; }
+    .stats { display: flex; gap: 14px; margin-top: 8px; font-size: .75rem; opacity: .9; }
+    main { display: grid; grid-template-columns: 1fr; max-width: 1200px; margin: 0 auto; }
+    @media (min-width: 900px) {
+      main { grid-template-columns: 360px 1fr; min-height: calc(100vh - 150px); }
+    }
+    .list-pane { border-right: 1px solid var(--line); background: #f7f3eb; max-height: calc(100vh - 150px); overflow: auto; }
+    .alpha { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 10px; position: sticky; top: 0; background: #f7f3eb; z-index: 2; }
+    .alpha button {
+      border: 0; background: transparent; color: var(--green-2);
+      font-weight: 700; cursor: pointer; padding: 2px 5px; border-radius: 4px;
+    }
+    .alpha button:hover { background: #e4efe8; }
+    .drug-item {
+      display: block; width: 100%; text-align: left; border: 0; border-bottom: 1px solid var(--line);
+      background: transparent; padding: 10px 14px; cursor: pointer; font: inherit;
+    }
+    .drug-item:hover, .drug-item.active { background: #fff; }
+    .drug-item .g { font-weight: 700; color: var(--green); }
+    .drug-item .b { font-size: .8rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .drug-item .c { font-size: .7rem; color: var(--brand); margin-top: 2px; }
+    .detail { padding: 16px; overflow: auto; max-height: calc(100vh - 150px); }
+    .empty { color: var(--muted); padding: 40px 16px; text-align: center; }
+    .title-block h2 { font-family: "Source Serif 4", Georgia, serif; margin: 0 0 6px; font-size: 1.7rem; color: var(--green); }
+    .pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 14px; }
+    .pill {
+      background: #e8f3ec; color: var(--green); border-radius: 999px;
+      padding: 3px 10px; font-size: .78rem; font-weight: 600;
+    }
+    .pill.brand { background: #f8ead3; color: #7a4a0a; }
+    .pill.src { background: #fde8ea; color: var(--red); }
+    section.card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      padding: 14px 16px; margin-bottom: 12px; box-shadow: var(--shadow);
+    }
+    section.card h3 {
+      margin: 0 0 8px; font-size: .78rem; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--red);
+    }
+    section.card p, section.card li { font-size: .95rem; line-height: 1.45; margin: 0; white-space: pre-wrap; }
+    table.forms { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    table.forms th { text-align: left; font-size: .72rem; color: var(--muted); border-bottom: 1px solid var(--line); padding: 4px 6px; }
+    table.forms td { padding: 6px; border-bottom: 1px solid #eee8dc; vertical-align: top; }
+    footer {
+      max-width: 1200px; margin: 0 auto; padding: 18px;
+      font-size: .75rem; color: var(--muted); line-height: 1.4;
+    }
+    .warn { background: #fff4e5; border: 1px solid #efd2a0; color: #6a4b10; padding: 10px 12px; border-radius: 10px; font-size: .82rem; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div class="stripes"><span class="k"></span><span class="r"></span><span class="g"></span></div>
+  <header>
+    <div class="brand-row">
+      <div class="crest">KE</div>
+      <div>
+        <h1>Kenya Drug Index</h1>
+        <div class="sub">For health workers · KEML 2023 · KNMF 2023 · live PPB Kenya trade names</div>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input id="q" type="search" placeholder="Search generic or brand (e.g. Coartem, amoxicillin, Panadol)" autofocus />
+      <select id="cat"><option value="">All categories</option></select>
+    </div>
+    <div class="stats">
+      <span id="count">Loading…</span>
+      <span>LOU = KEML level of use</span>
+    </div>
+  </header>
+  <main>
+    <div class="list-pane">
+      <div class="alpha" id="alpha"></div>
+      <div id="list"></div>
+    </div>
+    <div class="detail" id="detail">
+      <div class="empty">Search or tap a medicine. Cards show Kenyan PPB brands, KEML formulations, KNMF fields, and Kenya “when to use” notes for malaria, HIV, TB and NCDs.</div>
+    </div>
+  </main>
+  <footer>
+    Built for Kenyan clinicians, pharmacists, pharmaceutical technologists and nurses as a field identification and prescribing aid.
+    Sources: Ministry of Health KEML 2023, KNMF 2023, and live Kenya-registered trade names from the public PPB product register.
+    Confirm packs on products.pharmacyboardkenya.org. Report ADRs via PPB PvERS.
+  </footer>
+  <script src="drugs-gz-0.js"></script>
+  <script src="drugs-gz-1.js"></script>
+  <script src="drugs-gz-2.js"></script>
+  <script src="drugs-gz-3.js"></script>
+  <script>
+    let drugs = [];
+    const listEl = document.getElementById("list");
+    const detailEl = document.getElementById("detail");
+    const qEl = document.getElementById("q");
+    const catEl = document.getElementById("cat");
+    const countEl = document.getElementById("count");
+    let activeId = null;
+    const cats = [];
+    const alpha = document.getElementById("alpha");
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(ch => {
+      const b = document.createElement("button");
+      b.textContent = ch;
+      b.onclick = () => {
+        qEl.value = "";
+        renderList(drugs.filter(d => d.generic.toUpperCase().startsWith(ch) && matchCat(d)));
+      };
+      alpha.appendChild(b);
+    });
+    function matchCat(d) { return !catEl.value || d.category === catEl.value; }
+    function hay(d) {
+      const packs = (d.ppb_products||[]).map(p => (p.trade_name||"") + " " + (p.brand||"") + " " + (p.manufacturer||"")).join(" ");
+      return (d.generic + " " + (d.brands||[]).join(" ") + " " + packs + " " + (d.atc||"") + " " + (d.keml_codes||[]).join(" ")).toLowerCase();
+    }
+    function filter() {
+      const q = qEl.value.trim().toLowerCase();
+      let rows = drugs.filter(matchCat);
+      if (q) rows = rows.filter(d => hay(d).includes(q));
+      return rows;
+    }
+    function renderList(rows) {
+      countEl.textContent = rows.length + " medicines";
+      listEl.innerHTML = "";
+      rows.slice(0, 400).forEach(d => {
+        const btn = document.createElement("button");
+        btn.className = "drug-item" + (d.id === activeId ? " active" : "");
+        btn.innerHTML = `<div class="g">${esc(d.generic)}</div>
+          <div class="b">${d.brands && d.brands.length ? "Brands: " + d.brands.slice(0,8).join(" · ") + (d.ppb_count ? " · " + d.ppb_count + " PPB packs" : "") : (d.ppb_count ? d.ppb_count + " PPB-registered packs" : "Generic / INN (check local brands)")}</div>
+          <div class="c">${esc(d.category || "")}${d.when_to_use && d.when_to_use.length ? " · Kenya protocol note" : ""}</div>`;
+        btn.onclick = () => show(d);
+        listEl.appendChild(btn);
+      });
+    }
+    function esc(s) {
+      return String(s||"").replace(/[&<>"]/g, c => ({"&":"&","<":"<",">":">","\"":"""}[c]));
+    }
+    function block(title, text) {
+      if (!text) return "";
+      return `<section class="card"><h3>${esc(title)}</h3><p>${esc(text)}</p></section>`;
+    }
+    function whenBlocks(d) {
+      const hits = d.when_to_use || [];
+      if (!hits.length) return "";
+      return hits.map(h => `<section class="card" style="border-color:#c5a24a;background:#fffaf0">
+        <h3>When to use in Kenya — ${esc(h.title || "")}</h3>
+        <p>${esc(h.text || "")}</p>
+        <p style="margin-top:8px;font-size:.78rem;color:var(--muted)">${esc(h.source || "")}</p>
+      </section>`).join("");
+    }
+    function ppbTable(d) {
+      const rows = d.ppb_products || [];
+      if (!rows.length) {
+        return `<section class="card"><h3>PPB-registered packs in Kenya</h3><p>No live register match for this INN yet. Identify by generic name on the pack and verify at products.pharmacyboardkenya.org.</p></section>`;
+      }
+      const body = rows.slice(0, 25).map(p => `<tr>
+        <td><strong>${esc(p.brand || "")}</strong><div style="color:var(--muted);font-size:.8rem">${esc(p.trade_name || "")}</div></td>
+        <td>${esc(p.manufacturer || "")}</td>
+        <td>${esc(p.status || "")}</td>
+      </tr>`).join("");
+      return `<section class="card"><h3>PPB-registered packs in Kenya (${rows.length}${d.ppb_count && d.ppb_count>rows.length ? " of " + d.ppb_count : ""} shown)</h3>
+        <table class="forms"><thead><tr><th>Trade name</th><th>Manufacturer / LTR</th><th>Status</th></tr></thead><tbody>${body}</tbody></table></section>`;
+    }
+    function show(d) {
+      activeId = d.id;
+      const brands = (d.brands||[]).map(b => `<span class="pill brand">${esc(b)}</span>`).join("");
+      const forms = (d.formulations||[]).filter(f => f.form || f.strength);
+      const formRows = forms.map(f => `<tr><td>${esc(f.form)}</td><td>${esc(f.strength)}</td><td>${esc(f.lou)}</td></tr>`).join("");
+      detailEl.innerHTML = `
+        <div class="title-block">
+          <h2>${esc(d.generic)}</h2>
+          <div class="pills">
+            ${d.atc ? `<span class="pill">ATC ${esc(d.atc)}</span>` : ""}
+            ${d.keml_codes && d.keml_codes[0] ? `<span class="pill">KEML ${esc(d.keml_codes[0])}</span>` : ""}
+            <span class="pill src">${esc(d.source)}</span>
+          </div>
+          ${brands ? `<div class="pills">${brands}</div>` : ""}
+        </div>
+        <div class="warn">Confirm the pack, strength and PPB registration before prescribing or administering.</div>
+        ${whenBlocks(d)}
+        ${ppbTable(d)}
+        <section class="card"><h3>Formulations (KEML)</h3>
+          ${formRows ? `<table class="forms"><thead><tr><th>Dose form</th><th>Strength / size</th><th>LOU</th></tr></thead><tbody>${formRows}</tbody></table>` : "<p>See pack / KNMF line.</p>"}
+        </section>
+        ${block("Indications and dosage", d.indications || d.dosage)}
+        ${block("Contraindications", d.contraindications)}
+        ${block("Precautions (incl. pregnancy, renal, hepatic)", d.precautions)}
+        ${block("Side effects", d.side_effects)}
+        ${block("Mode of action", d.mode_of_action)}
+        ${block("Interactions", d.interactions)}
+        ${block("Overdose management", d.overdose)}
+        ${block("Notes", d.notes)}
+        <section class="card"><h3>Category</h3><p>${esc(d.category)}</p></section>`;
+      if (window.innerWidth < 900) detailEl.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+    qEl.addEventListener("input", () => renderList(filter()));
+    catEl.addEventListener("change", () => renderList(filter()));
+    async function boot() {
+      countEl.textContent = "Loading medicines…";
+      try {
+        if (!window.DRUGS_GZ) throw new Error("missing catalog");
+        const bin = Uint8Array.from(atob(window.DRUGS_GZ), c => c.charCodeAt(0));
+        const ds = new DecompressionStream("gzip");
+        const out = await new Response(new Blob([bin]).stream().pipeThrough(ds)).json();
+        drugs = out;
+      } catch (e) {
+        countEl.textContent = "Could not load catalog";
+        return;
+      }
+      [...new Set(drugs.map(d => d.category).filter(Boolean))].sort().forEach(c => {
+        const o = document.createElement("option");
+        o.value = c; o.textContent = c;
+        catEl.appendChild(o);
+      });
+      const params = new URLSearchParams(location.search);
+      if (params.get("q")) qEl.value = params.get("q");
+      renderList(filter());
+      const openName = (params.get("open") || "").toLowerCase();
+      if (openName) {
+        const hit = filter().find(d => d.generic.toLowerCase().includes(openName) || (d.brands||[]).some(b => b.toLowerCase().includes(openName)));
+        if (hit) show(hit);
+      }
+    }
+    boot();
+  </script>
+</body>
+</html>
