@@ -1,0 +1,1 @@
+window.DRUGS_GZ+="";
